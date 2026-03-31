@@ -75,7 +75,7 @@ async def upload_csv(
                 category_cache[cat_name] = cat
             category = category_cache[cat_name]
 
-            carbon_kg = calculate_carbon(cat_name, amount)
+            carbon_kg = calculate_carbon(db,cat_name, amount)
 
             txn = Transaction(
                 user_id=current_user.id,
