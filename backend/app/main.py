@@ -2,9 +2,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import Base, engine
+from app.seed import run_seed                    # ← 추가
 from app.routers import auth, uploads, analysis, recommendations
 
 Base.metadata.create_all(bind=engine)
+run_seed()                                       # ← 추가
 
 app = FastAPI(
     title="탄소발자국 추적기 API",
