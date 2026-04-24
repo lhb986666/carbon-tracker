@@ -2,11 +2,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import Base, engine
-from app.seed import run_seed                    # ← 추가
-from app.routers import auth, uploads, analysis, recommendations
+from app.seed import run_seed
+from app.routers import auth, uploads, analysis, recommendations, simulation
 
 Base.metadata.create_all(bind=engine)
-run_seed()                                       # ← 추가
+run_seed()
 
 app = FastAPI(
     title="탄소발자국 추적기 API",
@@ -26,6 +26,7 @@ app.include_router(auth.router)
 app.include_router(uploads.router)
 app.include_router(analysis.router)
 app.include_router(recommendations.router)
+app.include_router(simulation.router)
 
 @app.get("/")
 def root():

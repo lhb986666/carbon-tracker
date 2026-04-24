@@ -12,6 +12,7 @@ class User(Base):
     password_hash = Column(String, nullable=False)
     age_group     = Column(String, nullable=True)
     region        = Column(String, nullable=True)
+    expo_push_token = Column(String, nullable=True)
     created_at    = Column(DateTime, default=datetime.datetime.utcnow)
 
     uploads      = relationship("Upload", back_populates="user")

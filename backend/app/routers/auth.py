@@ -91,3 +91,16 @@ def login(form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get
 @router.post("/logout")
 def logout():
     return {"message": "로그아웃 되었습니다."}
+
+class PushTokenRequest(BaseModel):
+    token: str
+
+@router.post("/push-token")
+def save_push_token(
+    req: PushTokenRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    current_user.expo_push_token = req.token
+    db.commit()
+    return {"message": "푸시 토큰이 저장됐어요"}
