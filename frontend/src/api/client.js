@@ -31,6 +31,7 @@ export const authAPI = {
       { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
     ),
   logout: () => api.post("/api/auth/logout"),
+  me: () => api.get("/api/auth/me"),
 };
 
 export const uploadAPI = {

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "mobile",
+    "name": "탄소발자국 추적기",
     "slug": "mobile",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -21,7 +21,12 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.lhb986666.carbontracker"
+      "package": "com.lhb986666.carbontracker",
+      "permissions": [
+        "RECEIVE_BOOT_COMPLETED",
+        "VIBRATE",
+        "BIND_NOTIFICATION_LISTENER_SERVICE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"

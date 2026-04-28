@@ -104,3 +104,13 @@ def save_push_token(
     current_user.expo_push_token = req.token
     db.commit()
     return {"message": "푸시 토큰이 저장됐어요"}
+
+@router.get("/me")
+def get_me(current_user: User = Depends(get_current_user)):
+    return {
+        "id": str(current_user.id),
+        "email": current_user.email,
+        "age_group": current_user.age_group,
+        "region": current_user.region,
+        "created_at": current_user.created_at.isoformat(),
+    }
