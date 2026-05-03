@@ -5,6 +5,7 @@ import Upload from "./pages/Upload";
 import Dashboard from "./pages/Dashboard";
 import Recommendations from "./pages/Recommendations";
 import MyPage from "./pages/MyPage";
+import OfflineBanner from "./components/OfflineBanner";
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem("access_token");
@@ -37,6 +38,7 @@ function Layout({ children }) {
           </NavLink>
         ))}
       </nav>
+      <OfflineBanner />
       <main>{children}</main>
     </div>
   );
