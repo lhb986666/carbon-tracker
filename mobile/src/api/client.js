@@ -3,7 +3,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const BASE_URL = 'https://carbon-tracker.duckdns.org'
 
-const client = axios.create({ baseURL: BASE_URL })
+const client = axios.create({ 
+  baseURL: BASE_URL,
+  timeout: 10000,
+})
 
 client.interceptors.request.use(async (config) => {
   const token = await AsyncStorage.getItem('token')
