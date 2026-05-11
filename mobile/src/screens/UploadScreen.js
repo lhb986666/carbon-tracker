@@ -1,10 +1,10 @@
-  // src/screens/UploadScreen.js
+// src/screens/UploadScreen.js
 import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native'
 import * as DocumentPicker from 'expo-document-picker'
 import { useState } from 'react'
 import { uploadCSV } from '../api/upload'
 
-export default function UploadScreen() {
+export default function UploadScreen({ navigation }) {
   const [file, setFile] = useState(null)
   const [loading, setLoading] = useState(false)
 
@@ -29,7 +29,9 @@ export default function UploadScreen() {
         type: 'text/csv',
       })
       await uploadCSV(formData)
-      Alert.alert('완료', '분석이 완료됐어요!')
+      Alert.alert('완료', '분석이 완료됐어요!', [
+        { text: '확인', onPress: () => navigation.navigate('대시보드') }
+      ])
     } catch (e) {
       Alert.alert('오류', '업로드 중 문제가 발생했어요')
     } finally {

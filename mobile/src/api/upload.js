@@ -1,10 +1,26 @@
 // src/api/upload.js
-import client from './client'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export const uploadCSV = (formData) =>
-  client.post('/api/uploads', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-  }).then(r => r.data)
+const BASE_URL = 'https://carbon-tracker.duckdns.org'
 
-export const getUploadList = () =>
-  client.get('/api/uploads').then(r => r.data)
+export const uploadCSV = async (formData) => {
+  const token = await AsyncStorage.getItem('token')
+  const response = await fetch(`${BASE_URL}/api/uploads`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+    body: formData,
+  })
+  if (!response.ok) throw new Error('Upload failed')
+  return response.json()
+}
+
+export const getUploadList = async () => {
+  const token = await AsyncStorage.getItem('token')
+  const response = await fetch(`${BASE_URL}/api/uploads`, {
+    headers: { 'Authorization': `Bearer ${token}` }
+  })
+  if (!response.ok) throw new Error('Failed')
+  return response.json()
+}
