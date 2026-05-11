@@ -14,7 +14,7 @@ export default function LoginScreen({ navigation }) {
       await AsyncStorage.setItem('token', data.access_token)
       navigation.replace('Main')
     } catch (e) {
-      Alert.alert('로그인 실패', '이메일 또는 비밀번호를 확인해주세요')
+      Alert.alert('로그인 실패', JSON.stringify(e.message) + ' / ' + JSON.stringify(e.response?.data))
     }
   }
 
