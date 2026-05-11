@@ -1,9 +1,9 @@
 // src/screens/DashboardScreen.js
 import { View, Text, ScrollView, StyleSheet, Dimensions, ActivityIndicator } from 'react-native'
 import { BarChart } from 'react-native-chart-kit'
-import { useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
 import { getMonthlyReport } from '../api/analysis'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const screenWidth = Dimensions.get('window').width
 
@@ -13,20 +13,23 @@ export default function DashboardScreen() {
   const [equivalents, setEquivalents] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    getMonthlyReport().then(res => {
-      setTotal(res.total_carbon_kg)
-      setEquivalents(res.equivalents)
-      const categories = Object.keys(res.by_category)
-      const values = Object.values(res.by_category)
-      if (categories.length > 0) {
-        setChartData({
-          labels: categories,
-          datasets: [{ data: values }]
-        })
-      }
-    }).catch(() => {}).finally(() => setLoading(false))
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      setLoading(true)
+      getMonthlyReport().then(res => {
+        setTotal(res.total_carbon_kg)
+        setEquivalents(res.equivalents)
+        const categories = Object.keys(res.by_category)
+        const values = Object.values(res.by_category)
+        if (categories.length > 0) {
+          setChartData({
+            labels: categories,
+            datasets: [{ data: values }]
+          })
+        }
+      }).catch(() => {}).finally(() => setLoading(false))
+    }, [])
+  )
 
   if (loading) return (
     <View style={styles.center}>
