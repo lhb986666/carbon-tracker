@@ -4,6 +4,8 @@ import { BarChart } from 'react-native-chart-kit'
 import { useCallback, useState } from 'react'
 import { useFocusEffect } from '@react-navigation/native'
 import { getMonthlyReport } from '../api/analysis'
+import useCardNotification from '../hooks/useCardNotification'
+import { uploadTransaction } from '../api/upload'
 
 const screenWidth = Dimensions.get('window').width
 
@@ -13,23 +15,33 @@ export default function DashboardScreen() {
   const [equivalents, setEquivalents] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  useFocusEffect(
-    useCallback(() => {
-      setLoading(true)
-      getMonthlyReport().then(res => {
-        setTotal(res.total_carbon_kg)
-        setEquivalents(res.equivalents)
-        const categories = Object.keys(res.by_category)
-        const values = Object.values(res.by_category)
-        if (categories.length > 0) {
-          setChartData({
-            labels: categories,
-            datasets: [{ data: values }]
-          })
-        }
-      }).catch(() => {}).finally(() => setLoading(false))
-    }, [])
-  )
+  const loadData = useCallback(() => {
+    setLoading(true)
+    getMonthlyReport().then(res => {
+      setTotal(res.total_carbon_kg)
+      setEquivalents(res.equivalents)
+      const categories = Object.keys(res.by_category)
+      const values = Object.values(res.by_category)
+      if (categories.length > 0) {
+        setChartData({
+          labels: categories,
+          datasets: [{ data: values }]
+        })
+      }
+    }).catch(() => {}).finally(() => setLoading(false))
+  }, [])
+
+  useFocusEffect(loadData)
+
+  // 카드 알림 감지 시 자동 업로드
+  useCardNotification(async ({ merchant, amount }) => {
+    try {
+      await uploadTransaction({ merchant, amount })
+      loadData() // 대시보드 즉시 갱신
+    } catch (e) {
+      console.error('자동 업로드 실패', e)
+    }
+  })
 
   if (loading) return (
     <View style={styles.center}>

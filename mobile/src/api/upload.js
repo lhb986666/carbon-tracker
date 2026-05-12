@@ -24,3 +24,17 @@ export const getUploadList = async () => {
   if (!response.ok) throw new Error('Failed')
   return response.json()
 }
+
+export const uploadTransaction = async ({ merchant, amount }) => {
+  const token = await AsyncStorage.getItem('token')
+  const response = await fetch(`${BASE_URL}/api/transactions`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ merchant, amount }),
+  })
+  if (!response.ok) throw new Error('Transaction upload failed')
+  return response.json()
+}

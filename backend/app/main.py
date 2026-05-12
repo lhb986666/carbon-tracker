@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import Base, engine
 from app.seed import run_seed
-from app.routers import auth, uploads, analysis, recommendations, simulation
+from app.routers import auth, uploads, analysis, recommendations, simulation, transactions
 
 Base.metadata.create_all(bind=engine)
 run_seed()
@@ -26,6 +26,7 @@ app.include_router(uploads.router)
 app.include_router(analysis.router)
 app.include_router(recommendations.router)
 app.include_router(simulation.router)
+app.include_router(transactions.router)
 
 @app.get("/")
 def root():
