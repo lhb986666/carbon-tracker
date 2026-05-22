@@ -1,0 +1,67 @@
+--------- beginning of system
+05-16 13:49:40.516  2973  6787 V NotificationService: registerNotificationListener component=ComponentInfo{com.samsung.android.game.gamehome/com.samsung.android.game.gamehome.receiver.NotificationListenerOverR} enabled =false
+05-16 13:49:42.102  2973  6781 D NotificationService: RuneStone State change mIsRuneStoneEnabled = true
+05-16 13:49:43.135  2973  2973 D NotificationService: Ongoing activity package intent receive - action = android.intent.action.PACKAGE_CHANGED pkg = com.android.systemui userId = 0
+05-16 13:49:43.135  2973  2973 D NotificationService: updateOngoingActivityCurrentSupportAppList - no metadata pkg = com.android.systemui
+05-16 13:49:43.136  2973  2973 D NotificationService: Package is changed - Send broadcast ACTION_ONGOING_ACTIVITY_LIST_CHANGED
+05-16 13:49:45.922  2973  6835 D NotificationService: getAllowedOngoingActivityAppList - size = 12
+05-16 13:49:45.922  2973  6835 D NotificationService: getAllowedOngoingActivityAppList - pkg = com.google.android.apps.maps
+05-16 13:49:45.922  2973  6835 D NotificationService: getAllowedOngoingActivityAppList - pkg = com.samsung.android.app.interpreter
+05-16 13:49:45.922  2973  6835 D NotificationService: getAllowedOngoingActivityAppList - pkg = com.sec.android.app.clockpackage
+05-16 13:49:45.922  2973  6835 D NotificationService: getAllowedOngoingActivityAppList - pkg = com.sec.android.app.voicenote
+05-16 13:49:45.922  2973  6835 D NotificationService: getAllowedOngoingActivityAppList - pkg = com.samsung.android.app.notes
+05-16 13:49:45.922  2973  6835 D NotificationService: getAllowedOngoingActivityAppList - pkg = com.sec.android.app.safetyassurance
+05-16 13:49:45.922  2973  6835 D NotificationService: getAllowedOngoingActivityAppList - pkg = com.nhn.android.nmap
+05-16 13:49:45.922  2973  6835 D NotificationService: getAllowedOngoingActivityAppList - pkg = com.kakao.taxi
+05-16 13:49:45.922  2973  6835 D NotificationService: getAllowedOngoingActivityAppList - pkg = com.lguplus.navi
+05-16 13:49:45.922  2973  6835 D NotificationService: getAllowedOngoingActivityAppList - pkg = com.samsung.android.oneconnect
+05-16 13:49:45.922  2973  6835 D NotificationService: getAllowedOngoingActivityAppList - pkg = com.samsung.android.spay
+05-16 13:49:45.922  2973  6835 D NotificationService: getAllowedOngoingActivityAppList - pkg = com.towneers.www
+05-16 13:49:47.925  2973  4892 W NotificationService: Toast already killed. pkg=com.android.systemui token=android.os.BinderProxy@a316349
+05-16 13:49:52.859  2973  6825 V NotificationService: registerNotificationListener component=ComponentInfo{com.samsung.android.mdecservice/com.samsung.android.cmcsettings.notisyncui.NotiSyncListenerService} enabled =false
+05-16 13:50:31.021  2973  2973 D NotificationService: registerConversationAppPolicyScpm
+05-16 13:50:31.037  2973  2973 D NotificationService: registerConversationAppPolicyScpm - success
+05-16 13:50:52.175  2973  2973 I NotificationService: Cannot find enqueued record for key: 0|com.samsung.android.app.dressroom|-848862641|null|1000
+05-16 13:51:50.528  2973  4892 W NotificationService: Toast already killed. pkg=com.samsung.android.mtp token=android.os.BinderProxy@6a5835a
+05-16 14:21:16.966  2973  4560 V NotificationService: registerNotificationListener component=ComponentInfo{com.samsung.android.game.gamehome/com.samsung.android.game.gamehome.receiver.NotificationListenerOverR} enabled =false
+05-16 14:21:26.865  2973  4450 V NotificationService: registerNotificationListener component=ComponentInfo{com.samsung.android.mdecservice/com.samsung.android.cmcsettings.notisyncui.NotiSyncListenerService} enabled =false
+05-16 14:25:47.192  2973  2973 D NotificationService: Changed notification by edgelighting.
+05-16 14:25:49.147  2973  2973 D NotificationService: Changed notification by edgelighting.
+05-16 14:28:06.059  2973  3524 D NotificationService: getAllowedOngoingActivityAppList - size = 12
+05-16 14:28:06.060  2973  3524 D NotificationService: getAllowedOngoingActivityAppList - pkg = com.google.android.apps.maps
+05-16 14:28:06.060  2973  3524 D NotificationService: getAllowedOngoingActivityAppList - pkg = com.samsung.android.app.interpreter
+05-16 14:28:06.060  2973  3524 D NotificationService: getAllowedOngoingActivityAppList - pkg = com.sec.android.app.clockpackage
+05-16 14:28:06.060  2973  3524 D NotificationService: getAllowedOngoingActivityAppList - pkg = com.sec.android.app.voicenote
+05-16 14:28:06.060  2973  3524 D NotificationService: getAllowedOngoingActivityAppList - pkg = com.samsung.android.app.notes
+05-16 14:28:06.060  2973  3524 D NotificationService: getAllowedOngoingActivityAppList - pkg = com.sec.android.app.safetyassurance
+05-16 14:28:06.060  2973  3524 D NotificationService: getAllowedOngoingActivityAppList - pkg = com.nhn.android.nmap
+05-16 14:28:06.060  2973  3524 D NotificationService: getAllowedOngoingActivityAppList - pkg = com.kakao.taxi
+05-16 14:28:06.060  2973  3524 D NotificationService: getAllowedOngoingActivityAppList - pkg = com.lguplus.navi
+05-16 14:28:06.060  2973  3524 D NotificationService: getAllowedOngoingActivityAppList - pkg = com.samsung.android.oneconnect
+05-16 14:28:06.060  2973  3524 D NotificationService: getAllowedOngoingActivityAppList - pkg = com.samsung.android.spay
+05-16 14:28:06.060  2973  3524 D NotificationService: getAllowedOngoingActivityAppList - pkg = com.towneers.www
+05-16 14:28:06.495  2973  3791 D NotificationService: setAllowOngoingActivity - Send broadcast - pkg = com.samsung.android.app.aodservice value = true
+05-16 14:28:06.739  2973  6791 V NotificationService: registerNotificationListener component=ComponentInfo{com.samsung.android.mdecservice/com.samsung.android.cmcsettings.notisyncui.NotiSyncListenerService} enabled =false
+--------- beginning of main
+05-16 14:28:24.784  2973  6773 D NotificationService: getNotificationHistory for dump pkg=com.samsung.android.messaging
+05-16 14:28:24.784  2973  6773 D NotificationService: getNotificationHistory for dump pkg=com.verizon.messaging.vzmsgs
+05-16 14:28:24.784  2973  6773 D NotificationService: getNotificationHistory for dump pkg=com.kakao.talk
+05-16 14:28:24.784  2973  6773 D NotificationService: getNotificationHistory for dump pkg=jp.naver.line.android
+05-16 14:28:24.784  2973  6773 D NotificationService: getNotificationHistory for dump pkg=com.sds.mysinglesquare
+05-16 14:28:24.784  2973  6773 D NotificationService: getNotificationHistory for dump pkg=com.samsung.knox.message
+05-16 14:28:24.784  2973  6773 D NotificationService: getNotificationHistory for dump pkg=com.google.android.talk
+05-16 14:28:24.784  2973  6773 D NotificationService: getNotificationHistory for dump pkg=com.sgiggle.production
+05-16 14:28:24.784  2973  6773 D NotificationService: getNotificationHistory for dump pkg=com.nimbuzz
+05-16 14:28:24.784  2973  6773 D NotificationService: getNotificationHistory for dump pkg=kik.android
+05-16 14:28:24.784  2973  6773 D NotificationService: getNotificationHistory for dump pkg=com.bsb.hike
+05-16 14:28:24.784  2973  6773 D NotificationService: getNotificationHistory for dump pkg=com.tencent.mm
+05-16 14:28:24.784  2973  6773 D NotificationService: getNotificationHistory for dump pkg=com.skype.raider
+05-16 14:28:24.784  2973  6773 D NotificationService: getNotificationHistory for dump pkg=com.facebook.orca
+05-16 14:28:24.784  2973  6773 D NotificationService: getNotificationHistory for dump pkg=com.google.android.apps.tachyon
+05-16 14:28:24.784  2973  6773 D NotificationService: getNotificationHistory for dump pkg=com.snapchat.android
+05-16 14:28:24.784  2973  6773 D NotificationService: getNotificationHistory for dump pkg=com.discord
+05-16 14:28:24.784  2973  6773 D NotificationService: getNotificationHistory for dump pkg=Uxpp.UC
+05-16 14:28:24.784  2973  6773 D NotificationService: getNotificationHistory for dump pkg=com.google.android.apps.dynamite
+05-16 14:28:24.784  2973  6773 D NotificationService: getNotificationHistory for dump pkg=org.thoughtcrime.securesms
+05-16 14:31:24.272  2973  2973 D NotificationService: Changed notification by edgelighting.
+05-16 14:31:54.639  2973  2973 D NotificationService: Changed notification by edgelighting.

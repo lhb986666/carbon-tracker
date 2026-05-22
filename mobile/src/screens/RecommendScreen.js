@@ -1,17 +1,21 @@
 // src/screens/RecommendScreen.js
 import { View, Text, ScrollView, StyleSheet, ActivityIndicator } from 'react-native'
-import { useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
 import { getRecommendations } from '../api/analysis'
 
 export default function RecommendScreen() {
   const [recommendations, setRecommendations] = useState([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    getRecommendations().then(res => {
-      setRecommendations(res)
-    }).catch(() => {}).finally(() => setLoading(false))
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      setLoading(true)
+      getRecommendations().then(res => {
+        setRecommendations(res)
+      }).catch(() => {}).finally(() => setLoading(false))
+    }, [])
+  )
 
   if (loading) return (
     <View style={styles.center}>
