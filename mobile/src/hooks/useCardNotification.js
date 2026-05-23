@@ -43,7 +43,7 @@ export default function useCardNotification(onDetected) {
               `${merchant} ${amount.toLocaleString()}원`,
               [
                 { text: '무시', style: 'cancel' },
-                { text: '탄소 계산', onPress: () => onDetected({ merchant, amount }) }
+                { text: '탄소 계산', onPress: () => onDetected({ merchant, amount, source: 'notification' }) }
               ]
             )
           }

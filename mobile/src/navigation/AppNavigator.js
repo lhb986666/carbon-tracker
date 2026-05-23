@@ -11,6 +11,7 @@ import DashboardScreen from '../screens/DashboardScreen'
 import UploadScreen from '../screens/UploadScreen'
 import RecommendScreen from '../screens/RecommendScreen'
 import SimulationScreen from '../screens/SimulationScreen'
+import MyPageScreen from '../screens/MyPageScreen'
 
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -22,6 +23,7 @@ function MainTabs() {
       <Tab.Screen name="Upload" component={UploadScreen} options={{ title: 'CSV 업로드' }} />
       <Tab.Screen name="Simulation" component={SimulationScreen} options={{ title: '결제 입력' }} />
       <Tab.Screen name="Recommend" component={RecommendScreen} options={{ title: '친환경 추천' }} />
+      <Tab.Screen name="MyPage" component={MyPageScreen} options={{ title: '마이페이지' }} />
     </Tab.Navigator>
   )
 }

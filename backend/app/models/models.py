@@ -56,6 +56,7 @@ class Transaction(Base):
     amount           = Column(Integer, nullable=False)
     carbon_kg        = Column(Float, default=0.0)
     transaction_date = Column(Date, nullable=False)
+    source           = Column(String, default="csv")
 
     user            = relationship("User", back_populates="transactions")
     upload          = relationship("Upload", back_populates="transactions")

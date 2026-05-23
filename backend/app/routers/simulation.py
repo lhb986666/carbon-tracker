@@ -18,6 +18,7 @@ router = APIRouter(prefix="/api/simulation", tags=["simulation"])
 class PaymentRequest(BaseModel):
     merchant_name: str
     amount: int
+    source: str = "simulation"
 
 
 @router.post("")
@@ -42,6 +43,7 @@ async def simulate_payment(
         amount=req.amount,
         carbon_kg=carbon_kg,
         transaction_date=date.today(),
+        source=req.source,
     )
     db.add(txn)
     db.commit()
