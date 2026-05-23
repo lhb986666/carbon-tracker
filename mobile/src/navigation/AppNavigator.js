@@ -2,6 +2,9 @@
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { useEffect, useState } from 'react'
+import { ActivityIndicator, View } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import LoginScreen from '../screens/LoginScreen'
 import RegisterScreen from '../screens/RegisterScreen'
 import DashboardScreen from '../screens/DashboardScreen'
@@ -24,11 +27,33 @@ function MainTabs() {
 }
 
 export default function AppNavigator() {
+  const [isLoading, setIsLoading] = useState(true)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  useEffect(() => {
+    AsyncStorage.getItem('token').then(token => {
+      setIsLoggedIn(!!token)
+      setIsLoading(false)
+    })
+  }, [])
+
+  if (isLoading) return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <ActivityIndicator size="large" color="#16a34a" />
+    </View>
+  )
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
+        {isLoggedIn ? (
+          <Stack.Screen name="Main" component={MainTabs} options={{ headerShown: false }} />
+        ) : (
+          <>
+            <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
+          </>
+        )}
         <Stack.Screen name="Main" component={MainTabs} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>

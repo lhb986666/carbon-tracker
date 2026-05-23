@@ -5,6 +5,8 @@ import android.service.notification.StatusBarNotification;
 import android.os.Bundle;
 import android.util.Log;
 import android.content.SharedPreferences;
+import android.content.Intent;
+import com.facebook.react.HeadlessJsTaskService;
 
 public class NotificationService extends NotificationListenerService {
 
@@ -20,14 +22,20 @@ public class NotificationService extends NotificationListenerService {
         if (isCardApp(packageName)) {
             Log.d("CarbonTracker", "카드사 감지됨!");
             String data = packageName + "|" + title + "|" + text;
-            
-            // SharedPreferences에 저장
+
+            // SharedPreferences에 저장 (앱 켜져있을 때 폴링용)
             SharedPreferences prefs = getSharedPreferences("CardNotification", MODE_PRIVATE);
             prefs.edit()
                 .putString("latest", data)
                 .putLong("timestamp", System.currentTimeMillis())
                 .apply();
             Log.d("CarbonTracker", "SharedPreferences 저장 완료!");
+
+            // Headless JS Task 실행 (앱 꺼져있을 때)
+            Intent intent = new Intent(getApplicationContext(), CardNotificationTaskService.class);
+            intent.putExtra("data", data);
+            getApplicationContext().startService(intent);
+            Log.d("CarbonTracker", "Headless JS Task 시작!");
         }
     }
 

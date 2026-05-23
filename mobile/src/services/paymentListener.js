@@ -45,4 +45,4 @@ async function handleNotification(notification) {
   } catch (e) {
     console.log('탄소 계산 오류:', e)
   }
-} 
+}
