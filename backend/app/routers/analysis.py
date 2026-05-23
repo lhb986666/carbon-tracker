@@ -141,3 +141,28 @@ def compare_with_average(
         "diff_percent": diff_pct,
         "age_group": current_user.age_group,
     }
+
+
+@router.get("/transactions")
+def get_transactions(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    rows = (
+        db.query(Transaction)
+        .filter(Transaction.user_id == current_user.id)
+        .order_by(Transaction.transaction_date.desc())
+        .all()
+    )
+
+    return [
+        {
+            "id": str(r.id),
+            "merchant_name": r.merchant_name,
+            "amount": r.amount,
+            "carbon_kg": r.carbon_kg,
+            "source": r.source or "csv",
+            "created_at": str(r.transaction_date),
+        }
+        for r in rows
+    ]
