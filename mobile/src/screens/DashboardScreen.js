@@ -1,5 +1,5 @@
 // src/screens/DashboardScreen.js
-import { View, Text, ScrollView, StyleSheet, Dimensions, ActivityIndicator } from 'react-native'
+import { View, Text, ScrollView, StyleSheet, Dimensions, ActivityIndicator, TouchableOpacity } from 'react-native'
 import { BarChart } from 'react-native-chart-kit'
 import { useCallback, useState } from 'react'
 import { useFocusEffect } from '@react-navigation/native'
@@ -9,6 +9,9 @@ import useCardNotification from '../hooks/useCardNotification'
 const screenWidth = Dimensions.get('window').width
 
 export default function DashboardScreen() {
+  const now = new Date()
+  const [year, setYear] = useState(now.getFullYear())
+  const [month, setMonth] = useState(now.getMonth() + 1)
   const [total, setTotal] = useState(0)
   const [chartData, setChartData] = useState(null)
   const [equivalents, setEquivalents] = useState(null)
@@ -18,7 +21,7 @@ export default function DashboardScreen() {
 
   const loadData = useCallback(() => {
     setLoading(true)
-    getMonthlyReport().then(res => {
+    getMonthlyReport(year, month).then(res => {
       setTotal(res.total_carbon_kg)
       setEquivalents(res.equivalents)
       const cats = Object.keys(res.by_category)
@@ -30,15 +33,39 @@ export default function DashboardScreen() {
           labels: cats.map(c => c.length > 4 ? c.slice(0, 4) + '..' : c),
           datasets: [{ data: vals }]
         })
+      } else {
+        setChartData(null)
       }
     }).catch(() => {}).finally(() => setLoading(false))
-  }, [])
+  }, [year, month])
 
   useFocusEffect(loadData)
 
   useCardNotification(async () => {
     loadData()
   })
+
+  const goPrev = () => {
+    if (month === 1) {
+      setYear(y => y - 1)
+      setMonth(12)
+    } else {
+      setMonth(m => m - 1)
+    }
+  }
+
+  const goNext = () => {
+    const isCurrentMonth = year === now.getFullYear() && month === now.getMonth() + 1
+    if (isCurrentMonth) return
+    if (month === 12) {
+      setYear(y => y + 1)
+      setMonth(1)
+    } else {
+      setMonth(m => m + 1)
+    }
+  }
+
+  const isCurrentMonth = year === now.getFullYear() && month === now.getMonth() + 1
 
   if (loading) return (
     <View style={styles.center}>
@@ -48,13 +75,30 @@ export default function DashboardScreen() {
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      {/* 헤더 */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>🌿 탄소 대시보드</Text>
-        <Text style={styles.headerSub}>이번 달 탄소 배출량 현황</Text>
+        <Text style={styles.headerSub}>월별 탄소 배출량 현황</Text>
       </View>
 
+      {/* 월 선택 */}
+      <View style={styles.monthSelector}>
+        <TouchableOpacity style={styles.monthBtn} onPress={goPrev}>
+          <Text style={styles.monthBtnText}>◀</Text>
+        </TouchableOpacity>
+        <Text style={styles.monthText}>{year}년 {month}월</Text>
+        <TouchableOpacity
+          style={[styles.monthBtn, isCurrentMonth && styles.monthBtnDisabled]}
+          onPress={goNext}
+          disabled={isCurrentMonth}
+        >
+          <Text style={[styles.monthBtnText, isCurrentMonth && styles.monthBtnTextDisabled]}>▶</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* 총 배출량 카드 */}
       <View style={styles.totalCard}>
-        <Text style={styles.totalLabel}>이번 달 총 배출량</Text>
+        <Text style={styles.totalLabel}>{year}년 {month}월 총 배출량</Text>
         <Text style={styles.totalNum}>{total.toFixed(1)}</Text>
         <Text style={styles.totalUnit}>kg CO₂</Text>
         <View style={styles.totalBadge}>
@@ -64,6 +108,7 @@ export default function DashboardScreen() {
         </View>
       </View>
 
+      {/* 등가 환산 */}
       {equivalents && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>등가 환산</Text>
@@ -87,6 +132,7 @@ export default function DashboardScreen() {
         </View>
       )}
 
+      {/* 업종별 차트 */}
       {chartData && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>업종별 배출량</Text>
@@ -127,7 +173,7 @@ export default function DashboardScreen() {
         <View style={styles.section}>
           <View style={styles.emptyCard}>
             <Text style={styles.emptyIcon}>📊</Text>
-            <Text style={styles.emptyText}>아직 데이터가 없어요</Text>
+            <Text style={styles.emptyText}>{year}년 {month}월 데이터가 없어요</Text>
             <Text style={styles.emptySub}>CSV 업로드 또는 결제 시뮬레이션을 해보세요</Text>
           </View>
         </View>
@@ -141,11 +187,25 @@ export default function DashboardScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f0fdf4' },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  header: { paddingTop: 56, paddingHorizontal: 20, paddingBottom: 16 },
+  header: { paddingTop: 56, paddingHorizontal: 20, paddingBottom: 8 },
   headerTitle: { fontSize: 24, fontWeight: '700', color: '#14532d' },
   headerSub: { fontSize: 13, color: '#6b7280', marginTop: 4 },
+  monthSelector: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+    marginHorizontal: 16, marginVertical: 12,
+    backgroundColor: '#fff', borderRadius: 14, padding: 12,
+    shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 6, elevation: 1,
+  },
+  monthBtn: {
+    width: 36, height: 36, borderRadius: 18,
+    backgroundColor: '#dcfce7', justifyContent: 'center', alignItems: 'center',
+  },
+  monthBtnDisabled: { backgroundColor: '#f1f5f9' },
+  monthBtnText: { fontSize: 16, color: '#16a34a', fontWeight: '700' },
+  monthBtnTextDisabled: { color: '#9ca3af' },
+  monthText: { fontSize: 18, fontWeight: '700', color: '#14532d', marginHorizontal: 24 },
   totalCard: {
-    margin: 16, padding: 24,
+    margin: 16, marginTop: 0, padding: 24,
     backgroundColor: '#16a34a', borderRadius: 20,
     alignItems: 'center',
     shadowColor: '#16a34a', shadowOpacity: 0.3, shadowRadius: 12, elevation: 6,
