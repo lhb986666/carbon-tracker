@@ -56,7 +56,6 @@ export default function AppNavigator() {
             <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
           </>
         )}
-        <Stack.Screen name="Main" component={MainTabs} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   )

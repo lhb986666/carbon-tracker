@@ -40,6 +40,7 @@ def create_transaction(
         amount=req.amount,
         carbon_kg=carbon_kg,
         transaction_date=date.today(),
+        source='notification',
     )
     db.add(txn)
     db.commit()

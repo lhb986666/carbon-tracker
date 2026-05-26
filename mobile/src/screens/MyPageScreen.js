@@ -1,6 +1,7 @@
 // src/screens/MyPageScreen.js
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from 'react-native'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useCallback } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import client from '../api/client'
 
@@ -16,32 +17,35 @@ export default function MyPageScreen({ navigation }) {
   const [loading, setLoading] = useState(true)
   const [totalCarbon, setTotalCarbon] = useState(0)
 
-  const load = useCallback(async () => {
-    try {
-      setLoading(true)
-      const [meRes, txRes] = await Promise.all([
-        client.get('/api/auth/me'),
-        client.get('/api/transactions'),
-      ])
-      setUser(meRes.data)
-      const txList = txRes.data || []
-      setTransactions(txList)
-      const total = txList.reduce((s, t) => s + (t.carbon_kg || 0), 0)
-      setTotalCarbon(total)
-    } catch (e) {
-      try {
-        const txRes = await client.get('/api/transactions')
-        const txList = txRes.data || []
-        setTransactions(txList)
-        const total = txList.reduce((s, t) => s + (t.carbon_kg || 0), 0)
-        setTotalCarbon(total)
-      } catch {}
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => { load() }, [load])
+  useFocusEffect(
+    useCallback(() => {
+      const load = async () => {
+        try {
+          setLoading(true)
+          const [meRes, txRes] = await Promise.all([
+            client.get('/api/auth/me'),
+            client.get('/api/analysis/transactions'),
+          ])
+          setUser(meRes.data)
+          const txList = txRes.data || []
+          setTransactions(txList)
+          const total = txList.reduce((s, t) => s + (t.carbon_kg || 0), 0)
+          setTotalCarbon(total)
+        } catch (e) {
+          try {
+            const txRes = await client.get('/api/analysis/transactions')
+            const txList = txRes.data || []
+            setTransactions(txList)
+            const total = txList.reduce((s, t) => s + (t.carbon_kg || 0), 0)
+            setTotalCarbon(total)
+          } catch {}
+        } finally {
+          setLoading(false)
+        }
+      }
+      load()
+    }, [])
+  )
 
   const handleLogout = () => {
     Alert.alert('로그아웃', '정말 로그아웃 하시겠어요?', [
