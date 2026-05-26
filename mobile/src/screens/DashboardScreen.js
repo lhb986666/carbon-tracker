@@ -5,7 +5,6 @@ import { useCallback, useState } from 'react'
 import { useFocusEffect } from '@react-navigation/native'
 import { getMonthlyReport } from '../api/analysis'
 import useCardNotification from '../hooks/useCardNotification'
-import { uploadTransaction } from '../api/upload'
 
 const screenWidth = Dimensions.get('window').width
 
@@ -37,13 +36,8 @@ export default function DashboardScreen() {
 
   useFocusEffect(loadData)
 
-  useCardNotification(async ({ merchant, amount, source }) => {
-    try {
-      await uploadTransaction({ merchant, amount, source })
-      loadData()
-    } catch (e) {
-      console.error('자동 업로드 실패', e)
-    }
+  useCardNotification(async () => {
+    loadData()
   })
 
   if (loading) return (
@@ -54,13 +48,11 @@ export default function DashboardScreen() {
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {/* 헤더 */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>🌿 탄소 대시보드</Text>
         <Text style={styles.headerSub}>이번 달 탄소 배출량 현황</Text>
       </View>
 
-      {/* 총 배출량 카드 */}
       <View style={styles.totalCard}>
         <Text style={styles.totalLabel}>이번 달 총 배출량</Text>
         <Text style={styles.totalNum}>{total.toFixed(1)}</Text>
@@ -72,7 +64,6 @@ export default function DashboardScreen() {
         </View>
       </View>
 
-      {/* 등가 환산 */}
       {equivalents && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>등가 환산</Text>
@@ -96,7 +87,6 @@ export default function DashboardScreen() {
         </View>
       )}
 
-      {/* 업종별 차트 — 가로 스크롤 */}
       {chartData && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>업종별 배출량</Text>
@@ -121,7 +111,6 @@ export default function DashboardScreen() {
             </View>
           </ScrollView>
 
-          {/* 업종별 목록 */}
           <View style={styles.catList}>
             {categories.map((cat, i) => (
               <View key={cat} style={styles.catRow}>

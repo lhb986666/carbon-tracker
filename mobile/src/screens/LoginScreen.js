@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { login } from '../api/auth'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen({ navigation, setIsLoggedIn }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -14,7 +14,7 @@ export default function LoginScreen({ navigation }) {
     try {
       const data = await login(email, password)
       await AsyncStorage.setItem('token', data.access_token)
-      navigation.replace('Main')
+      setIsLoggedIn(true)
     } catch (e) {
       Alert.alert('로그인 실패', '이메일 또는 비밀번호를 확인해주세요')
     } finally {
@@ -25,15 +25,12 @@ export default function LoginScreen({ navigation }) {
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <View style={styles.container}>
-
-        {/* 로고 영역 */}
         <View style={styles.logoArea}>
           <Text style={styles.logoIcon}>🌿</Text>
           <Text style={styles.title}>탄소발자국 추적기</Text>
           <Text style={styles.subtitle}>소비 내역 기반 탄소 배출량 분석</Text>
         </View>
 
-        {/* 입력 폼 */}
         <View style={styles.formCard}>
           <Text style={styles.label}>이메일</Text>
           <TextInput
@@ -68,7 +65,6 @@ export default function LoginScreen({ navigation }) {
         <TouchableOpacity style={styles.registerBtn} onPress={() => navigation.navigate('Register')}>
           <Text style={styles.registerText}>계정이 없어요 → <Text style={styles.registerLink}>회원가입</Text></Text>
         </TouchableOpacity>
-
       </View>
     </KeyboardAvoidingView>
   )

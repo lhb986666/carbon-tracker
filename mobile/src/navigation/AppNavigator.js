@@ -16,18 +16,6 @@ import MyPageScreen from '../screens/MyPageScreen'
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
 
-function MainTabs() {
-  return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
-      <Tab.Screen name="Dashboard" component={DashboardScreen} options={{ title: '대시보드' }} />
-      <Tab.Screen name="Upload" component={UploadScreen} options={{ title: 'CSV 업로드' }} />
-      <Tab.Screen name="Simulation" component={SimulationScreen} options={{ title: '결제 입력' }} />
-      <Tab.Screen name="Recommend" component={RecommendScreen} options={{ title: '친환경 추천' }} />
-      <Tab.Screen name="MyPage" component={MyPageScreen} options={{ title: '마이페이지' }} />
-    </Tab.Navigator>
-  )
-}
-
 export default function AppNavigator() {
   const [isLoading, setIsLoading] = useState(true)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -45,15 +33,31 @@ export default function AppNavigator() {
     </View>
   )
 
+  function MainTabs() {
+    return (
+      <Tab.Navigator screenOptions={{ headerShown: false }}>
+        <Tab.Screen name="Dashboard" component={DashboardScreen} options={{ title: '대시보드' }} />
+        <Tab.Screen name="Upload" component={UploadScreen} options={{ title: 'CSV 업로드' }} />
+        <Tab.Screen name="Simulation" component={SimulationScreen} options={{ title: '결제 입력' }} />
+        <Tab.Screen name="Recommend" component={RecommendScreen} options={{ title: '친환경 추천' }} />
+        <Tab.Screen name="MyPage" options={{ title: '마이페이지' }}>
+          {props => <MyPageScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
+        </Tab.Screen>
+      </Tab.Navigator>
+    )
+  }
+
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         {isLoggedIn ? (
-          <Stack.Screen name="Main" component={MainTabs} options={{ headerShown: false }} />
+          <Stack.Screen name="Main" component={MainTabs} />
         ) : (
           <>
-            <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Login">
+              {props => <LoginScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
+            </Stack.Screen>
+            <Stack.Screen name="Register" component={RegisterScreen} />
           </>
         )}
       </Stack.Navigator>

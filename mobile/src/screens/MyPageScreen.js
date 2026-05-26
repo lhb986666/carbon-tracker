@@ -11,7 +11,7 @@ const SOURCE_LABEL = {
   notification: { label: '카드감지', color: '#d97706', bg: '#fffbeb' },
 }
 
-export default function MyPageScreen({ navigation }) {
+export default function MyPageScreen({ navigation, setIsLoggedIn }) {
   const [user, setUser] = useState(null)
   const [transactions, setTransactions] = useState([])
   const [loading, setLoading] = useState(true)
@@ -53,7 +53,7 @@ export default function MyPageScreen({ navigation }) {
       {
         text: '로그아웃', style: 'destructive', onPress: async () => {
           await AsyncStorage.removeItem('token')
-          navigation.reset({ index: 0, routes: [{ name: 'Login' }] })
+          setIsLoggedIn(false)
         }
       }
     ])
