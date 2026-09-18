@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { recommendAPI } from "../api/client";
 import RecommendCard from "../components/RecommendCard";
+import AIRecommendCard from "../components/AIRecommendCard";
 
 export default function Recommendations() {
   const today = new Date();
@@ -9,11 +10,19 @@ export default function Recommendations() {
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [aiData, setAiData] = useState(null);
+  const [aiLoading, setAiLoading] = useState(true);
+
   useEffect(() => {
     recommendAPI.list(year, month, 10)
       .then((r) => setRecommendations(r.data))
       .catch(console.error)
       .finally(() => setLoading(false));
+
+    recommendAPI.getAI(year, month)
+      .then((r) => setAiData(r.data))
+      .catch(console.error)
+      .finally(() => setAiLoading(false));
   }, [year, month]);
 
   const totalSaving = recommendations.reduce((a, r) => a + r.saving_kg, 0).toFixed(1);
@@ -63,6 +72,22 @@ export default function Recommendations() {
             <StatBadge label="전체 추천" count={recommendations.length} color="#f0fdf4" textColor="#16a34a" borderColor="#bbf7d0" />
           </div>
         </>
+      )}
+
+      {/* AI 맞춤 분석 섹션 */}
+      {!aiLoading && aiData && aiData.recommendations?.length > 0 && (
+        <div style={{ marginBottom: "1.5rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
+            <h2 style={{ fontSize: 16, fontWeight: 600, color: "#111", margin: 0 }}>✨ AI 맞춤 분석</h2>
+            <span style={{ fontSize: 10, color: "#aaa" }}>최근 3개월 추이 기반</span>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {aiData.source === "gemini"
+              ? aiData.recommendations.map((rec, i) => <AIRecommendCard key={i} rec={rec} />)
+              : aiData.recommendations.map((rec, i) => <RecommendCard key={i} rec={rec} year={year} month={month} />)
+            }
+          </div>
+        </div>
       )}
 
       {/* 추천 카드 목록 */}

@@ -63,6 +63,8 @@ export const recommendAPI = {
     api.get("/api/recommendations/simulate", {
       params: { category, year, month },
     }),
+  getAI: (year, month) =>
+    api.get("/api/recommendations/ai", { params: { year, month } }),
 };
 
 export default api;
