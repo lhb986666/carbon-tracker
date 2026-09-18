@@ -19,7 +19,7 @@ SYSTEM_PROMPT = """너는 개인 탄소발자국 분석 서비스의 추천 엔�
 """
 
 model = genai.GenerativeModel(
-    model_name="gemini-3.6-flash",
+    model_name="gemini-3.5-flash-lite",
     system_instruction=SYSTEM_PROMPT,
 )
 
