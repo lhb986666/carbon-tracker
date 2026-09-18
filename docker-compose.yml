@@ -21,6 +21,8 @@ services:
     build: ./backend
     ports:
       - "8080:8000"
+    env_file:
+      - ./.env
     environment:
       DATABASE_URL: postgresql://postgres:password@db:5432/carbon_tracker
       SECRET_KEY: your-secret-key-change-in-production
