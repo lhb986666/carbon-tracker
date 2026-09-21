@@ -75,7 +75,14 @@ export default function Recommendations() {
       )}
 
       {/* AI 맞춤 분석 섹션 */}
-      {!aiLoading && aiData && aiData.recommendations?.length > 0 && (
+      {aiLoading ? (
+        <div style={{
+          marginBottom: "1.5rem", textAlign: "center", padding: "1.5rem 0",
+          background: "#fafafa", borderRadius: 12
+        }}>
+          <p style={{ fontSize: 12, color: "#aaa" }}>✨ AI가 소비 추이를 분석하고 있어요...</p>
+        </div>
+      ) : aiData && aiData.recommendations?.length > 0 && (
         <div style={{ marginBottom: "1.5rem" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
             <h2 style={{ fontSize: 16, fontWeight: 600, color: "#111", margin: 0 }}>✨ AI 맞춤 분석</h2>

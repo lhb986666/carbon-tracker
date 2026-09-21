@@ -26,6 +26,7 @@ services:
     environment:
       DATABASE_URL: postgresql://postgres:password@db:5432/carbon_tracker
       SECRET_KEY: your-secret-key-change-in-production
+      PYTHONUNBUFFERED: "1"
     depends_on:
       db:
         condition: service_healthy

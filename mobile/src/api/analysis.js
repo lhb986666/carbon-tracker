@@ -9,3 +9,6 @@ export const getTrend = () =>
 
 export const getRecommendations = () =>
   client.get('/api/recommendations').then(r => r.data)
+
+export const getAIRecommendations = (year, month) =>
+  client.get('/api/recommendations/ai', { params: { year, month } }).then(r => r.data)
