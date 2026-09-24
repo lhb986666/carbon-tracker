@@ -89,13 +89,13 @@ export default function RecommendScreen() {
           <>
             <View style={styles.aiSectionHeader}>
               <Text style={styles.aiSectionTitle}>✨ AI 맞춤 분석</Text>
-              <Text style={styles.aiSectionSub}>최근 3개월 추이 기반</Text>
+              <Text style={styles.aiSectionSub}>가맹점·개인 평균 기반</Text>
             </View>
             {aiData.source === 'gemini' ? (
               aiData.recommendations.map((item, index) => {
                 const config = TREND_CONFIG[item.trend] || TREND_CONFIG.유지
                 return (
-                  <View key={index} style={styles.card}>
+                  <View key={index} style={styles.aiCard}>
                     <View style={styles.cardHeader}>
                       <Text style={styles.category}>{item.category}</Text>
                       <View style={[styles.badge, { backgroundColor: config.bg }]}>
@@ -104,12 +104,34 @@ export default function RecommendScreen() {
                         </Text>
                       </View>
                     </View>
-                    <Text style={styles.alternative}>{item.message}</Text>
-                    <View style={styles.savingRow}>
-                      <Text style={styles.savingLabel}>예상 절감</Text>
-                      <Text style={[styles.savingNum, { color: config.color }]}>
-                        -{item.expected_reduction_pct}%
+
+                    <Text style={styles.situationText}>{item.situation}</Text>
+
+                    <View style={[styles.insightBox, { backgroundColor: config.bg }]}>
+                      <Text style={[styles.insightText, { color: config.color }]}>
+                        💡 {item.insight}
                       </Text>
+                    </View>
+
+                    <Text style={styles.actionText}>✅ {item.action}</Text>
+
+                    <View style={styles.statsRow}>
+                      <View style={styles.statItem}>
+                        <Text style={[styles.statNum, { color: '#16a34a' }]}>
+                          -{item.expected_saving_krw?.toLocaleString()}원
+                        </Text>
+                        <Text style={styles.statLabel}>예상 절약</Text>
+                      </View>
+                      <View style={styles.statItem}>
+                        <Text style={[styles.statNum, { color: config.color }]}>
+                          -{item.expected_saving_kg}kg
+                        </Text>
+                        <Text style={styles.statLabel}>CO₂ 절감</Text>
+                      </View>
+                      <View style={styles.statItem}>
+                        <Text style={styles.statNum}>{item.expected_reduction_pct}%</Text>
+                        <Text style={styles.statLabel}>감축률</Text>
+                      </View>
                     </View>
                   </View>
                 )
@@ -156,7 +178,6 @@ export default function RecommendScreen() {
             const config = PRIORITY_CONFIG[item.priority] || PRIORITY_CONFIG.low
             return (
               <View key={index} style={styles.card}>
-                {/* 카드 헤더 */}
                 <View style={styles.cardHeader}>
                   <Text style={styles.category}>{item.category}</Text>
                   <View style={[styles.badge, { backgroundColor: config.bg }]}>
@@ -165,20 +186,14 @@ export default function RecommendScreen() {
                     </Text>
                   </View>
                 </View>
-
-                {/* 액션 */}
                 <Text style={styles.action}>{item.action}</Text>
                 <Text style={styles.alternative}>{item.alternative}</Text>
-
-                {/* 절감량 */}
                 <View style={styles.savingRow}>
                   <Text style={styles.savingLabel}>절감 가능</Text>
                   <Text style={[styles.savingNum, { color: config.color }]}>
                     -{item.saving_kg.toFixed(1)} kg CO₂
                   </Text>
                 </View>
-
-                {/* 팁 */}
                 <View style={styles.tipBox}>
                   <Text style={styles.tipText}>{item.tip}</Text>
                 </View>
@@ -217,6 +232,19 @@ const styles = StyleSheet.create({
     alignItems: 'center', marginBottom: 16,
   },
   aiLoadingText: { fontSize: 12, color: '#9ca3af' },
+  aiCard: {
+    backgroundColor: '#fff', borderRadius: 16, padding: 16,
+    marginBottom: 12, borderWidth: 1, borderColor: '#f3f4f6',
+    shadowColor: '#000', shadowOpacity: 0.04, shadowRadius: 6, elevation: 1,
+  },
+  situationText: { fontSize: 12, color: '#6b7280', marginBottom: 8, lineHeight: 18 },
+  insightBox: { borderRadius: 8, padding: 8, marginBottom: 8 },
+  insightText: { fontSize: 11, lineHeight: 16, fontWeight: '500' },
+  actionText: { fontSize: 13, color: '#1e293b', fontWeight: '600', marginBottom: 12, lineHeight: 18 },
+  statsRow: { flexDirection: 'row', gap: 16, paddingTop: 10, borderTopWidth: 1, borderTopColor: '#f3f4f6' },
+  statItem: { alignItems: 'flex-start' },
+  statNum: { fontSize: 15, fontWeight: '700', color: '#1e293b' },
+  statLabel: { fontSize: 10, color: '#9ca3af', marginTop: 2 },
   emptyCard: {
     backgroundColor: '#fff', borderRadius: 16, padding: 32,
     alignItems: 'center',

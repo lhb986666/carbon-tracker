@@ -5,4 +5,10 @@ export default defineConfig({
   plugins: [react({
     jsxRuntime: "automatic",
   })],
+  server: {
+    watch: {
+      usePolling: true,
+      interval: 300,
+    },
+  },
 });
