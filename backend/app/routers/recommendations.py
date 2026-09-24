@@ -44,7 +44,32 @@ def get_category_amount_for_month(db: Session, user_id, year: int, month: int) -
     return {r.name: int(r.total_amount) for r in rows}
 
 
-def get_merchant_frequency_for_month(db: Session, user_id, year: int, month: int, top_n: int = 3) -> dict:
+def get_weekday_pattern_for_month(db: Session, user_id, year: int, month: int) -> dict:
+    """카테고리별 요일별 이용 횟수 (postgres dow: 0=일 ~ 6=토)"""
+    DOW_NAMES = ["일", "월", "화", "수", "목", "금", "토"]
+    rows = (
+        db.query(
+            Category.name.label("category"),
+            extract("dow", Transaction.transaction_date).label("dow"),
+            func.count(Transaction.id).label("cnt"),
+        )
+        .join(Category, Category.id == Transaction.category_id)
+        .filter(
+            Transaction.user_id == user_id,
+            extract("year", Transaction.transaction_date) == year,
+            extract("month", Transaction.transaction_date) == month,
+        )
+        .group_by(Category.name, extract("dow", Transaction.transaction_date))
+        .all()
+    )
+    result: dict[str, dict] = {}
+    for r in rows:
+        result.setdefault(r.category, {})
+        result[r.category][DOW_NAMES[int(r.dow)]] = r.cnt
+    return result
+
+
+def get_merchant_frequency_for_month(db: Session, user_id, year: int, month: int, top_n: int = 5) -> dict:
     rows = (
         db.query(
             Category.name.label("category"),
@@ -152,12 +177,14 @@ def get_ai_recommendation(
     merchants = get_merchant_frequency_for_month(db, current_user.id, base_date.year, base_date.month)
     amounts_this_month = get_category_amount_for_month(db, current_user.id, base_date.year, base_date.month)
     baseline = get_personal_baseline(db, current_user.id, base_date, months_back=6)
+    weekday_pattern = get_weekday_pattern_for_month(db, current_user.id, base_date.year, base_date.month)
 
     profile_data = {
         "trend": {"이번달": this_month, "지난달": last_month, "지지난달": two_months_ago},
         "merchants": merchants,
         "amounts_this_month": amounts_this_month,
         "baseline": baseline,
+        "weekday_pattern": weekday_pattern,
         "user": {"age_group": current_user.age_group, "region": current_user.region},
     }
 
