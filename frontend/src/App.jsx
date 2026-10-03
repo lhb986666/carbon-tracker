@@ -62,6 +62,12 @@ export default function App() {
         <Route path="/recommendations" element={
           <PrivateRoute><Layout><Recommendations /></Layout></PrivateRoute>
         } />
+        <Route path="/social" element={
+          <PrivateRoute><Layout><Social /></Layout></PrivateRoute>
+        } />
+        <Route path="/social/:groupId" element={
+          <PrivateRoute><Layout><GroupDetail /></Layout></PrivateRoute>
+        } />
         <Route path="/mypage" element={
           <PrivateRoute><Layout><MyPage /></Layout></PrivateRoute>
         } />
