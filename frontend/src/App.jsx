@@ -5,6 +5,8 @@ import Upload from "./pages/Upload";
 import Dashboard from "./pages/Dashboard";
 import Recommendations from "./pages/Recommendations";
 import MyPage from "./pages/MyPage";
+import Social from "./pages/Social";
+import GroupDetail from "./pages/GroupDetail";
 import OfflineBanner from "./components/OfflineBanner";
 
 function PrivateRoute({ children }) {
@@ -25,6 +27,7 @@ function Layout({ children }) {
           { to: "/upload", label: "업로드" },
           { to: "/dashboard", label: "대시보드" },
           { to: "/recommendations", label: "추천" },
+          { to: "/social", label: "소셜" },
           { to: "/mypage", label: "마이페이지" },
         ].map(({ to, label }) => (
           <NavLink key={to} to={to} style={({ isActive }) => ({

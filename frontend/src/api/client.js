@@ -32,6 +32,17 @@ export const authAPI = {
     ),
   logout: () => api.post("/api/auth/logout"),
   me: () => api.get("/api/auth/me"),
+  updateMe: (data) => api.patch("/api/auth/me", data),
+};
+
+export const socialAPI = {
+  list: () => api.get("/api/groups"),
+  create: (name) => api.post("/api/groups", { name }),
+  join: (invite_code) => api.post("/api/groups/join", { invite_code }),
+  detail: (groupId) => api.get(`/api/groups/${groupId}`),
+  leave: (groupId) => api.delete(`/api/groups/${groupId}/leave`),
+  leaderboard: (groupId, year, month) =>
+    api.get(`/api/groups/${groupId}/leaderboard`, { params: { year, month, _: Date.now() } }),
 };
 
 export const uploadAPI = {

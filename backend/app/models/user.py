@@ -10,6 +10,7 @@ class User(Base):
     id            = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     email         = Column(String, unique=True, nullable=False, index=True)
     password_hash = Column(String, nullable=False)
+    nickname      = Column(String, nullable=True)
     age_group     = Column(String, nullable=True)
     region        = Column(String, nullable=True)
     expo_push_token = Column(String, nullable=True)

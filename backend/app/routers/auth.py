@@ -25,10 +25,16 @@ class RegisterRequest(BaseModel):
     password: str
     age_group: str | None = None
     region: str | None = None
+    nickname: str | None = None
 
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
+
+class UpdateProfileRequest(BaseModel):
+    nickname: str | None = None
+    age_group: str | None = None
+    region: str | None = None
 
 
 def hash_password(password: str) -> str:
@@ -71,6 +77,7 @@ def register(req: RegisterRequest, db: Session = Depends(get_db)):
         password_hash=hash_password(req.password),
         age_group=req.age_group,
         region=req.region,
+        nickname=req.nickname,
     )
     db.add(user)
     db.commit()
@@ -110,7 +117,24 @@ def get_me(current_user: User = Depends(get_current_user)):
     return {
         "id": str(current_user.id),
         "email": current_user.email,
+        "nickname": current_user.nickname or current_user.email.split("@")[0],
         "age_group": current_user.age_group,
         "region": current_user.region,
         "created_at": current_user.created_at.isoformat(),
     }
+
+
+@router.patch("/me")
+def update_me(
+    req: UpdateProfileRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    if req.nickname is not None:
+        current_user.nickname = req.nickname
+    if req.age_group is not None:
+        current_user.age_group = req.age_group
+    if req.region is not None:
+        current_user.region = req.region
+    db.commit()
+    return {"message": "프로필이 업데이트됐어요."}
