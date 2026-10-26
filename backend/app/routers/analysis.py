@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import func, extract
-from datetime import date
+from datetime import date, datetime
 
 from app.database import get_db
 from app.models.models import Transaction, Category
@@ -9,6 +9,7 @@ from app.models.user import User
 from app.routers.auth import get_current_user
 from app.services.carbon import to_equivalents
 from app.services.recommender import get_recommendations
+from app.services.daily_balance import build_daily_balance
 
 router = APIRouter(prefix="/api/analysis", tags=["analysis"])
 
@@ -166,3 +167,34 @@ def get_transactions(
         }
         for r in rows
     ]
+
+
+@router.get("/daily-balance")
+def daily_balance(
+    day: str = Query(default=None, description="YYYY-MM-DD, 기본값은 오늘"),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    target = datetime.strptime(day, "%Y-%m-%d").date() if day else date.today()
+    return build_daily_balance(db, current_user.id, target)
+
+
+@router.get("/active-days")
+def active_days(
+    year: int = Query(default=date.today().year),
+    month: int = Query(default=date.today().month),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    rows = (
+        db.query(Transaction.transaction_date, func.count(Transaction.id))
+        .filter(
+            Transaction.user_id == current_user.id,
+            extract("year", Transaction.transaction_date) == year,
+            extract("month", Transaction.transaction_date) == month,
+        )
+        .group_by(Transaction.transaction_date)
+        .order_by(Transaction.transaction_date.desc())
+        .all()
+    )
+    return [{"date": str(d), "count": c} for d, c in rows]

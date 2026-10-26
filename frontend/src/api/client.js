@@ -65,6 +65,10 @@ export const analysisAPI = {
   trend: () => api.get("/api/analysis/trend"),
   compare: (year, month) =>
     api.get("/api/analysis/compare", { params: { year, month } }),
+  dailyBalance: (day) =>
+    api.get("/api/analysis/daily-balance", { params: { day, _: Date.now() } }),
+  activeDays: (year, month) =>
+    api.get("/api/analysis/active-days", { params: { year, month } }),
 };
 
 export const recommendAPI = {

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { analysisAPI, recommendAPI } from "../api/client";
 import CarbonChart from "../components/CarbonChart";
 import RecommendCard from "../components/RecommendCard";
+import DailyBalance from "../components/DailyBalance";
 
 export default function Dashboard() {
   const today = new Date();
@@ -111,6 +112,13 @@ export default function Dashboard() {
         </Card>
         <Card title="6개월 추이">
           <CarbonChart data={trend} type="line" />
+        </Card>
+      </div>
+
+      {/* 하루 탄소 수지 */}
+      <div style={{ marginBottom: "1.5rem" }}>
+        <Card title="하루 탄소 수지 (아침 → 저녁)">
+          <DailyBalance year={year} month={month} />
         </Card>
       </div>
 
