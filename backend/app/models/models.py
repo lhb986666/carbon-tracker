@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, Float, Date, DateTime, ForeignKey
+from sqlalchemy import Column, String, Integer, Float, Date, DateTime, Time, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from app.database import Base
@@ -56,6 +56,7 @@ class Transaction(Base):
     amount           = Column(Integer, nullable=False)
     carbon_kg        = Column(Float, default=0.0)
     transaction_date = Column(Date, nullable=False)
+    transaction_time = Column(Time, nullable=True)
     source           = Column(String, default="csv")
 
     user            = relationship("User", back_populates="transactions")

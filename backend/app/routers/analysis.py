@@ -164,6 +164,7 @@ def get_transactions(
             "carbon_kg": r.carbon_kg,
             "source": r.source or "csv",
             "created_at": str(r.transaction_date),
+            "transaction_time": r.transaction_time.strftime("%H:%M") if r.transaction_time else None,
         }
         for r in rows
     ]

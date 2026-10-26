@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, UploadFile, File, HTTPException
 from sqlalchemy.orm import Session
 import pandas as pd
 import io, uuid
+from datetime import datetime
 
 from app.database import get_db
 from app.models.models import Upload, Transaction, Category, CarbonCoefficient
@@ -13,6 +14,19 @@ from app.services.carbon import calculate_carbon
 router = APIRouter(prefix="/api/uploads", tags=["uploads"])
 
 
+def _parse_time(value):
+    """'08:32' 또는 '08:32:15' 형식을 time으로. 비었거나 형식이 다르면 None."""
+    if value is None or (isinstance(value, float) and pd.isna(value)):
+        return None
+    text = str(value).strip()
+    for fmt in ("%H:%M:%S", "%H:%M"):
+        try:
+            return datetime.strptime(text, fmt).time()
+        except ValueError:
+            continue
+    return None
+
+
 def parse_csv(content: bytes) -> pd.DataFrame:
     df = pd.read_csv(io.BytesIO(content), encoding="utf-8-sig")
 
@@ -20,6 +34,8 @@ def parse_csv(content: bytes) -> pd.DataFrame:
     for col in df.columns:
         if any(k in col for k in ["일자", "날짜", "date"]):
             rename_map[col] = "transaction_date"
+        elif any(k in col for k in ["시각", "시간", "time"]):
+            rename_map[col] = "transaction_time"
         elif any(k in col for k in ["가맹점", "상호", "merchant"]):
             rename_map[col] = "merchant_name"
         elif any(k in col for k in ["금액", "이용액", "amount"]):
@@ -36,7 +52,13 @@ def parse_csv(content: bytes) -> pd.DataFrame:
     df["amount"] = df["amount"].astype(str).str.replace(",", "").astype(int).abs()
     df = df.dropna(subset=["merchant_name", "amount"])
 
-    return df[["transaction_date", "merchant_name", "amount"]]
+    # 거래시각 컬럼은 선택 사항: 없으면 전부 None(날짜만 있는 기존 CSV도 그대로 동작)
+    if "transaction_time" in df.columns:
+        df["transaction_time"] = df["transaction_time"].map(_parse_time)
+    else:
+        df["transaction_time"] = None
+
+    return df[["transaction_date", "transaction_time", "merchant_name", "amount"]]
 
 
 @router.post("")
@@ -85,6 +107,7 @@ async def upload_csv(
                 amount=amount,
                 carbon_kg=carbon_kg,
                 transaction_date=row["transaction_date"],
+                transaction_time=None if pd.isna(row["transaction_time"]) else row["transaction_time"],
             )
             db.add(txn)
 

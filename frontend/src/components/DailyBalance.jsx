@@ -72,7 +72,7 @@ export default function DailyBalance({ year, month }) {
           <div key={it.id} style={{ display: "grid", gridTemplateColumns: "52px 1fr auto", gap: 10, padding: "10px 0", borderBottom: "1px solid #f3f3f3", alignItems: "center" }}>
             <div style={{ fontSize: 12, color: "#888" }}>
               <div style={{ fontWeight: 600, color: "#555" }}>{it.time}</div>
-              <div style={{ fontSize: 10 }}>{it.slot}</div>
+              <div style={{ fontSize: 10 }}>{it.slot}{it.time_estimated && " · 추정"}</div>
             </div>
             <div style={{ minWidth: 0 }}>
               <div style={{ fontSize: 14, color: "#111", fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
@@ -104,9 +104,11 @@ export default function DailyBalance({ year, month }) {
           추천대로 실천하면 이 날 <b>−{fmt(data.potential_saving_kg)}kg</b> 더 줄일 수 있어요
         </div>
       )}
-      <p style={{ fontSize: 11, color: "#bbb", margin: "10px 0 0" }}>
-        * 카드 내역에는 결제 시각이 없어, 업종별 대표 시간대로 아침→저녁 순서를 추정해 보여줘요.
-      </p>
+      {data.time_is_estimated && (
+        <p style={{ fontSize: 11, color: "#bbb", margin: "10px 0 0" }}>
+          * '추정'으로 표시된 거래는 결제 시각이 없어 업종별 시간대로 순서를 추정했어요.
+        </p>
+      )}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
-from datetime import date
+from datetime import datetime, timedelta, timezone
 
 from app.database import get_db
 from app.models.models import Transaction, Category
@@ -9,6 +9,8 @@ from app.models.user import User
 from app.routers.auth import get_current_user
 from app.services.classifier import classify_merchant
 from app.services.carbon import calculate_carbon
+
+KST = timezone(timedelta(hours=9))  # 서버(UTC)와 무관하게 한국 시각으로 저장
 
 router = APIRouter(prefix="/api/transactions", tags=["transactions"])
 
@@ -31,6 +33,7 @@ def create_transaction(
         db.flush()
 
     carbon_kg = calculate_carbon(db, cat_name, req.amount)
+    now = datetime.now(KST)
 
     txn = Transaction(
         user_id=current_user.id,
@@ -39,7 +42,8 @@ def create_transaction(
         merchant_name=req.merchant,
         amount=req.amount,
         carbon_kg=carbon_kg,
-        transaction_date=date.today(),
+        transaction_date=now.date(),
+        transaction_time=now.time().replace(microsecond=0),
         source='notification',
     )
     db.add(txn)
@@ -52,4 +56,5 @@ def create_transaction(
         "amount": txn.amount,
         "carbon_kg": txn.carbon_kg,
         "category": cat_name,
+        "transaction_time": txn.transaction_time.strftime("%H:%M"),
     }
