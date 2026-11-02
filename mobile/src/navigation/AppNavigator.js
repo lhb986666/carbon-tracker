@@ -12,6 +12,7 @@ import UploadScreen from '../screens/UploadScreen'
 import RecommendScreen from '../screens/RecommendScreen'
 import SimulationScreen from '../screens/SimulationScreen'
 import MyPageScreen from '../screens/MyPageScreen'
+import SocialStack from './SocialStack'
 
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -35,11 +36,12 @@ export default function AppNavigator() {
 
   function MainTabs() {
     return (
-      <Tab.Navigator screenOptions={{ headerShown: false }}>
+      <Tab.Navigator screenOptions={{ headerShown: false, tabBarActiveTintColor: '#16a34a', tabBarLabelStyle: { fontSize: 10 } }}>
         <Tab.Screen name="Dashboard" component={DashboardScreen} options={{ title: '대시보드' }} />
         <Tab.Screen name="Upload" component={UploadScreen} options={{ title: 'CSV 업로드' }} />
         <Tab.Screen name="Simulation" component={SimulationScreen} options={{ title: '결제 입력' }} />
         <Tab.Screen name="Recommend" component={RecommendScreen} options={{ title: '친환경 추천' }} />
+        <Tab.Screen name="Social" component={SocialStack} options={{ title: '소셜' }} />
         <Tab.Screen name="MyPage" options={{ title: '마이페이지' }}>
           {props => <MyPageScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
         </Tab.Screen>

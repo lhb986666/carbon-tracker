@@ -66,11 +66,17 @@ export default function MyPageScreen({ navigation, setIsLoggedIn }) {
     return 'notification'
   }
 
-  const formatDate = (dateStr) => {
+  // 날짜(YYYY-MM-DD) + 실제 결제 시각(HH:MM). 시각이 없는 예전 데이터는 날짜만 표시
+  const formatDate = (dateStr, timeStr) => {
     if (!dateStr) return '-'
-    const d = new Date(dateStr)
-    return `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
+    const [, m, d] = String(dateStr).slice(0, 10).split('-')
+    const md = `${Number(m)}/${Number(d)}`
+    return timeStr ? `${md} ${timeStr}` : md
   }
+
+  // 최신 결제가 위로 (날짜 → 시각 순, 시각 없으면 맨 아래)
+  const sortKey = (t) => `${String(t.created_at || '').slice(0, 10)} ${t.transaction_time || '00:00'}`
+  const sortedTransactions = transactions.slice().sort((a, b) => (sortKey(a) < sortKey(b) ? 1 : -1))
 
   if (loading) return (
     <View style={styles.center}>
@@ -119,7 +125,7 @@ export default function MyPageScreen({ navigation, setIsLoggedIn }) {
             <Text style={styles.emptySub}>CSV 업로드 또는 결제 시뮬레이션을 해보세요</Text>
           </View>
         ) : (
-          transactions.slice().reverse().map((tx, i) => {
+          sortedTransactions.map((tx, i) => {
             const src = getSource(tx)
             const badge = SOURCE_LABEL[src] || SOURCE_LABEL.simulation
             return (
@@ -133,7 +139,7 @@ export default function MyPageScreen({ navigation, setIsLoggedIn }) {
                   </View>
                 </View>
                 <View style={styles.txBottom}>
-                  <Text style={styles.txDate}>{formatDate(tx.created_at || tx.이용일자)}</Text>
+                  <Text style={styles.txDate}>{formatDate(tx.created_at || tx.이용일자, tx.transaction_time)}</Text>
                   <Text style={styles.txAmount}>
                     {tx.amount ? `${Number(tx.amount).toLocaleString()}원` : ''}
                   </Text>

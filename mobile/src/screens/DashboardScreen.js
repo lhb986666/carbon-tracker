@@ -5,6 +5,8 @@ import { useCallback, useState } from 'react'
 import { useFocusEffect } from '@react-navigation/native'
 import { getMonthlyReport } from '../api/analysis'
 import useCardNotification from '../hooks/useCardNotification'
+import { emitDataChanged } from '../utils/dataEvents'
+import DailyBalance from '../components/DailyBalance'
 
 const screenWidth = Dimensions.get('window').width
 
@@ -43,6 +45,7 @@ export default function DashboardScreen() {
 
   useCardNotification(async () => {
     loadData()
+    emitDataChanged() // 소셜 탭 등 다른 화면도 바로 갱신
   })
 
   const goPrev = () => {
@@ -131,6 +134,14 @@ export default function DashboardScreen() {
           </View>
         </View>
       )}
+
+      {/* 하루 탄소 수지 (실제 결제 시각 기준) */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>하루 탄소 수지 (아침 → 저녁)</Text>
+        <View style={styles.dailyCard}>
+          <DailyBalance year={year} month={month} />
+        </View>
+      </View>
 
       {/* 업종별 차트 */}
       {chartData && (
@@ -233,6 +244,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff', borderRadius: 16, padding: 16,
     shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 6, elevation: 1,
     marginBottom: 10,
+  },
+  dailyCard: {
+    backgroundColor: '#fff', borderRadius: 16, padding: 16,
+    shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 6, elevation: 1,
   },
   catList: { backgroundColor: '#fff', borderRadius: 14, padding: 14 },
   catRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 8, borderBottomWidth: 0.5, borderBottomColor: '#f1f5f9' },

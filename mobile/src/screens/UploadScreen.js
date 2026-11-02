@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert, Scr
 import * as DocumentPicker from 'expo-document-picker'
 import { useState } from 'react'
 import { uploadCSV } from '../api/upload'
+import { emitDataChanged } from '../utils/dataEvents'
 
 export default function UploadScreen({ navigation }) {
   const [file, setFile] = useState(null)
@@ -29,6 +30,7 @@ export default function UploadScreen({ navigation }) {
         type: 'text/csv',
       })
       await uploadCSV(formData)
+      emitDataChanged() // 소셜 순위 즉시 갱신
       Alert.alert('완료', '분석이 완료됐어요!', [
         { text: '확인', onPress: () => navigation.navigate('Dashboard') }
       ])

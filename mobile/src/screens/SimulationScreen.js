@@ -2,6 +2,7 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, ScrollView, KeyboardAvoidingView, Platform } from 'react-native'
 import { useState } from 'react'
 import client from '../api/client'
+import { emitDataChanged } from '../utils/dataEvents'
 
 export default function SimulationScreen() {
   const [merchant, setMerchant] = useState('')
@@ -21,6 +22,7 @@ export default function SimulationScreen() {
         source: 'simulation',
       })
       setResult(res.data)
+      emitDataChanged() // 소셜 순위 즉시 갱신
     } catch (e) {
       Alert.alert('오류', '결제 시뮬레이션 중 문제가 발생했어요')
     } finally {
@@ -124,7 +126,7 @@ export default function SimulationScreen() {
             </View>
 
             <View style={styles.tipBox}>
-              <Text style={styles.tipText}>📊 대시보드에 자동 반영됐어요!</Text>
+              <Text style={styles.tipText}>📊 대시보드와 소셜 순위에 자동 반영됐어요!</Text>
             </View>
 
             <TouchableOpacity style={styles.resetBtn} onPress={handleReset}>
