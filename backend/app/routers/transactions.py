@@ -32,8 +32,35 @@ def create_transaction(
         db.add(cat)
         db.flush()
 
-    carbon_kg = calculate_carbon(db, cat_name, req.amount)
     now = datetime.now(KST)
+
+    # 같은 알림이 여러 번 들어와도 한 건만 저장 (2분 이내 동일 가맹점·금액)
+    DUP_WINDOW_SEC = 120
+    recent = (
+        db.query(Transaction)
+        .filter(
+            Transaction.user_id == current_user.id,
+            Transaction.source == 'notification',
+            Transaction.merchant_name == req.merchant,
+            Transaction.amount == req.amount,
+            Transaction.transaction_date == now.date(),
+        )
+        .all()
+    )
+    for t in recent:
+        t_dt = datetime.combine(t.transaction_date, t.transaction_time, tzinfo=KST)
+        if abs((now - t_dt).total_seconds()) <= DUP_WINDOW_SEC:
+            return {
+                "id": str(t.id),
+                "merchant": t.merchant_name,
+                "amount": t.amount,
+                "carbon_kg": t.carbon_kg,
+                "category": cat_name,
+                "transaction_time": t.transaction_time.strftime("%H:%M"),
+                "duplicate": True,
+            }
+
+    carbon_kg = calculate_carbon(db, cat_name, req.amount)
 
     txn = Transaction(
         user_id=current_user.id,
